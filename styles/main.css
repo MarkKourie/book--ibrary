@@ -1,0 +1,25 @@
+.hidden {
+    display: none;
+}
+
+.book-card {
+    margin: 10px;
+    width: 200px;
+    min-width: 200px;
+    height: 200px;
+    display: flex;
+    background-color: blue;
+    text-align: center;
+    align-content: center;
+}
+
+#bookshelf {
+    display: flex;
+}
+
+h3 {
+    display: flex;
+    font-size: revert;
+    margin: auto;
+     
+}
