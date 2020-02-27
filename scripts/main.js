@@ -11,7 +11,8 @@ const myLibrary = [{title: "The Bible",
                     readOrUnread: true,
                     id: create_UUID()}];
 
-const container = document.querySelector('.container');
+const bookshelf = document.querySelector('#bookshelf');
+const formSpace = document.querySelector('#form-space')
 const newBookButton = document.getElementById('new-book-button')
 newBookButton.addEventListener("click", (e) => displayForm())
 
@@ -39,7 +40,7 @@ function addBookToLibrary() {
     let author = document.getElementById('author-input').value
     let noOfPages = document.getElementById('pages-input').value
     let genre = document.getElementById('genre-input').value
-    let readOrUnread = document.getElementById('read-radio').checked
+    let readOrUnread = document.getElementById('read-it-checkbox').checked
     let newBook = new Book(title, author, noOfPages, genre, readOrUnread)
     myLibrary.push(newBook)
     document.getElementById('new-book-form').reset()
@@ -49,25 +50,51 @@ function addBookToLibrary() {
     addFlipping(latestCard)
 }
 
+function removeBookFromLibrary(target) {
+    myLibrary.splice(parseInt(target.dataset.indexNumber), 1)
+    target.remove()
+    reIndexLibrary()
+    render()
+}
+
+function markAsReadOrUnread(checkbox, target) {
+    //Changes read/unread status of object according to whether button checked or not
+    if (checkbox.checked) {
+        myLibrary[parseInt(target.dataset.indexNumber)].readOrUnread = true
+    } else {
+        myLibrary[parseInt(target.dataset.indexNumber)].readOrUnread = false
+    }
+}
+
 function displayForm() {
     document.getElementById("new-book-form").classList.toggle("hidden")
 }
 
-function render() { //This may be better if bookInfo is created only after establishing whether it's already there or not
+function render() { 
     for (let i = 0; i < myLibrary.length; i++) {
-        let bookInfo = document.createElement('div')
-        renderTitle(i, bookInfo)
-        bookInfo.setAttribute("id", `${myLibrary[i].id}`)
-        bookInfo.setAttribute("class", "book-card")
-        bookInfo.setAttribute("data-index-number", `${i}`)
-        if (document.getElementById(`${myLibrary[i].id}`)) { 
-            continue;
+        if (! document.getElementById(`${myLibrary[i].id}`)) {
+            let bookInfo = document.createElement('div')
+            renderTitle(i, bookInfo)
+            bookInfo.setAttribute("id", `${myLibrary[i].id}`)
+            bookInfo.setAttribute("class", "book-card")
+            bookInfo.setAttribute("data-index-number", `${i}`)
+            bookshelf.appendChild(bookInfo);
         } else {
-            container.appendChild(bookInfo);
-        };
-    }
-    
+            continue;
+        }
+    };
 }
+
+function reIndexLibrary() {
+    //changes the data-index-number attribute of all book cards to match the new library index
+    var bookCards = document.querySelectorAll('.book-card')
+    bookCards.forEach((card) => {
+        let renewedPosition = myLibrary.map(book => book.id).indexOf(card.id)
+        card.setAttribute("data-index-number", `${renewedPosition}`)
+    })
+}
+    
+
 //I used this for a unique id
 function create_UUID() {
     var dt = new Date().getTime();
@@ -87,7 +114,7 @@ function renderTitle(i, card) {
 
 function flipCard(card) {
     card.classList.toggle("flipped")
-    let i = parseInt(card.dataset.indexNumber)
+    let i = parseInt(card.dataset.indexNumber) 
     if (card.classList.contains("flipped")) {
         let bookInfoBack = document.createElement('div')
         let authorInfo = document.createElement('p')
@@ -96,23 +123,41 @@ function flipCard(card) {
         noOfPagesPara.textContent= `No of Pages: ${myLibrary[i].noOfPages}`
         let genreInfo = document.createElement('p')
         genreInfo.textContent = `Genre: ${myLibrary[i].genre}`
+        let removeButton = document.createElement('button')
+        removeButton.textContent = `Remove Book`
+        removeButton.addEventListener('click', (e) => removeBookFromLibrary(card) )
+        
+        let littleForm = document.createElement('form')
+        littleForm.setAttribute("class", "little-form")
+        littleForm.setAttribute("id", `read-unread-${myLibrary[i].title}`)
+        let checkIfRead = document.createElement('input')
+        checkIfRead.setAttribute("type", "checkbox")
+        littleForm.textContent = `Have you finished reading '${myLibrary[i].title}'?`
+        myLibrary[i].readOrUnread ? checkIfRead.checked = true : checkIfRead.checked = false;
+        littleForm.appendChild(checkIfRead)
+        checkIfRead.addEventListener('change', (e) => markAsReadOrUnread(checkIfRead, card))
+
+
         bookInfoBack.appendChild(authorInfo)
         bookInfoBack.appendChild(noOfPagesPara)
         bookInfoBack.appendChild(genreInfo)
+        bookInfoBack.appendChild(removeButton)
+        formSpace.appendChild(littleForm)
+        
         card.removeChild(card.childNodes[0])
         card.appendChild(bookInfoBack)
     } else {
         card.removeChild(card.childNodes[0])
         renderTitle(i, card)
+        littleForm = document.getElementById(`read-unread-${myLibrary[i].title}`)
+        littleForm.parentNode.removeChild(littleForm) 
     }
 }
 
-render() //took addFlipping out of render to see if I can make it so the event is only ever added to a card once. Still not working
-var cards = document.querySelectorAll('.book-card') //must be placed after render
+render() 
+var cards = document.querySelectorAll('.book-card') //must be placed after render for first instance of cards to be flippable
 addFlipping(cards)
 
 //To Do:
 //Make bookdiv background image linked to goodreads image search?
-//Add a remove book button and function
-//create read/unread button for each book
 //data-storage

@@ -10,22 +10,23 @@
         <div id="bookshelf" class="container"></div>
         <button type="button" id="new-book-button">Add New Book</button>
 
-        <form class="hidden" id="new-book-form">
-            <label for="title">Title:</label><br>
-            <input type="text" id="title-input" name="title"><br>
-            <label for="author">Author:</label><br>
-            <input type="text" id="author-input" name="author"><br>
-            <label for="no-of-pages">Number of Pages:</label><br>
-            <input type="text" id="pages-input" name="no-of-pages"><br>
-            <label for="genre">Genre:</label><br>
-            <input type="text" id="genre-input" name="genre"><br>
-            <label for="unread">Unread:</label>
-            <input type="radio" id="unread-radio" name="read-unread" value="unread"><br>
-            <label for="read">Read:</label>
-            <input type="radio" id="read-radio" name="read-unread" value="read"><br>
-            <button id="add-new-book" type="button" value="Add Book">Add New Book</button>
+        <div id="form-space" class="container">
+            <form class="hidden" id="new-book-form">
+                <label for="title">Title:</label><br>
+                <input type="text" id="title-input" name="title"><br>
+                <label for="author">Author:</label><br>
+                <input type="text" id="author-input" name="author"><br>
+                <label for="no-of-pages">Number of Pages:</label><br>
+                <input type="text" id="pages-input" name="no-of-pages"><br>
+                <label for="genre">Genre:</label><br>
+                <input type="text" id="genre-input" name="genre"><br>
+                <label for="read">Have you read this book?</label>
+                <input type="checkbox" id="read-it-checkbox" name="read-unread" value="read"><br>
+                <button id="add-new-book" type="button" value="Add Book">Add New Book</button>
+            </form>
 
-        </form>
+            
+        </div>
 
         <script src="scripts/main.js"></script>
     </body>
