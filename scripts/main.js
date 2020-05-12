@@ -1,3 +1,9 @@
+/* To do: 
+1. refactor using classes
+2. add local storage
+3. make the CSS prettier
+*/
+
 const myLibrary = [{title: "The Bible",
                     author: "Unknown",
                     noOfPages:"1200",
@@ -26,13 +32,15 @@ function addFlipping(cards) {
 }
 
 
-function Book(title, author, noOfPages, genre, readOrUnread) {
-    this.title = title
-    this.author = author
-    this.noOfPages = noOfPages
-    this.genre = genre
-    this.readOrUnread = readOrUnread
-    this.id = create_UUID()
+class Book {
+    constructor(title, author, noOfPages, genre, readOrUnread) {
+        this.title = title
+        this.author = author
+        this.noOfPages = noOfPages
+        this.genre = genre
+        this.readOrUnread = readOrUnread
+        this.id = create_UUID()
+    }
 }
 
 function addBookToLibrary() {
@@ -137,6 +145,7 @@ function flipCard(card) {
         littleForm.appendChild(checkIfRead)
         checkIfRead.addEventListener('change', (e) => markAsReadOrUnread(checkIfRead, card))
 
+        bookInfoBack.classList.add("card-back")
 
         bookInfoBack.appendChild(authorInfo)
         bookInfoBack.appendChild(noOfPagesPara)
